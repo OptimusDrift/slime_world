@@ -113,6 +113,7 @@
     <Compile Include="Assets\Cinemachine\Timeline\CinemachineMixer.cs" />
     <Compile Include="Assets\Cinemachine\Timeline\CinemachineShot.cs" />
     <Compile Include="Assets\Cinemachine\Timeline\CinemachineTrack.cs" />
+    <Compile Include="Assets\Script\Platform\Platform.cs" />
     <Compile Include="Assets\Script\Player\PlayerController.cs" />
     <Compile Include="Assets\Script\Power\FirePower.cs" />
     <Compile Include="Assets\Script\Power\Power.cs" />

@@ -10,7 +10,7 @@ public class Power : MonoBehaviour
 
     public void UsePower(Rigidbody2D rb, float direction)
     {
-        rb.velocity = new Vector2(direction * dashSpeed, rb.velocity.y);
+        rb.velocity = new Vector2(direction * dashSpeed, 5f);
     }
 
     public string GetName()
