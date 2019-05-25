@@ -29,7 +29,6 @@ public class SimpleAtack : Power
     override
         public void UsePowerPlayer(Rigidbody2D rb, float direction)
     {
-        Debug.Log(speed);
         rb.velocity = new Vector2(direction * speed, height);
     }
     override

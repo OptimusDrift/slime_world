@@ -10,6 +10,11 @@ public class FirePower : Power
     }
 
     override
+        public void UsePowerPlayer(Rigidbody2D rb, float direction)
+    {
+        Debug.Log("asd");
+    }
+    override
         public void UsePowerEnemy(Rigidbody2D rb, float direction)
     {
 

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header ("Salto")]
     //moveImput es el valor hacia donde se mueve control
     //atackImput es para saber si esta atacando
     //jumpImput es para saber si esta saltando
@@ -16,11 +17,13 @@ public class PlayerController : MonoBehaviour
     private bool isJumping;
     //Que es lo que se considera suelo
     public LayerMask whatIsGround;
+
     //A donde esta apuntando el pj
-    private int direction = 1;
+    public int direction = 1;
     //colisionador
     private CapsuleCollider2D cc2d;
 
+    [Header("Poderes")]
     //POWERS
     //Lista de poderes
     private List<string> allPowerGet;
@@ -39,6 +42,7 @@ public class PlayerController : MonoBehaviour
     //Velocidad del pj
     public float speed;
 
+    [Header("Vida")]
     //Valores del pj
     //Vida
     public float live;
@@ -49,6 +53,7 @@ public class PlayerController : MonoBehaviour
     //Fuerza del salto
     public float jumpForce;
 
+    [Header("Tiempo")]
     //Tiempos
     //Tiempo actual del salto
     public float jumpTime;
@@ -169,6 +174,9 @@ public class PlayerController : MonoBehaviour
             case "wallJump":
                 currentPower = gameObject.GetComponent<WallJump>();
                 break;
+            case "firePower":
+                currentPower = gameObject.GetComponent<FirePower>();
+                break;
             default:
                 //gameObject.AddComponent<WallJump>();
                 break;
@@ -270,6 +278,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                Debug.Log("asd");
                 currentPower.UsePowerPlayer(rb, direction);
             }
         }

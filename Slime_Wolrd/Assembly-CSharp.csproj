@@ -120,6 +120,7 @@
     <Compile Include="Assets\Script\Power\Power.cs" />
     <Compile Include="Assets\Script\Power\SimpleAtack.cs" />
     <Compile Include="Assets\Script\Power\WallJump.cs" />
+    <Compile Include="Assets\Script\Sin calsificar\MovimentAcidBall.cs" />
     <None Include="Assets\Cinemachine\ReleaseNotes.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:/Users/DK_RZ/Documents/Slime_worldGit/Slime_Wolrd/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>

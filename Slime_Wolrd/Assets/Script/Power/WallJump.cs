@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class WallJump : Power
 {
-    private float distance = 1.30f;
+    public float distanceCollition = 1.30f;
+    public Transform posWallJump;
+    public GameObject shot;
+    public Transform shotSpawn;
     WallJump()
     {
         namePower = "wallJump";
@@ -28,17 +31,25 @@ public class WallJump : Power
     override
     public void UsePowerPlayer(Rigidbody2D rb, float direction)
     {
-        Debug.Log(speed);
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, (Vector2.right * direction) * transform.localScale.x, distance);
-        if (hit.collider!=null)
+        RaycastHit2D hit = Physics2D.Raycast(posWallJump.position, (Vector2.right * direction) * posWallJump.localScale.x, distanceCollition);
+        if (hit.collider != null)
         {
-            rb.velocity = new Vector2(-direction * speed, height);
+            if (hit.collider.tag == "Wall")
+            {
+                rb.velocity = new Vector2(-direction * speed, height);
+            }
+        }
+        else
+        {
+            Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
         }
     }
-    private void OnDrawGizmos()
+
+    /*private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
 
-        Gizmos.DrawLine(transform.position, transform.position + Vector3.right * transform.localScale.x * distance);
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.right * transform.localScale.x * distanceCollition);
     }
+    */
 }
