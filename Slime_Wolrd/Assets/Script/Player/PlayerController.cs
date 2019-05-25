@@ -4,53 +4,97 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private float moveInput, atackInput;
+    //moveImput es el valor hacia donde se mueve control
+    //atackImput es para saber si esta atacando
+    //jumpImput es para saber si esta saltando
+    //changePowerInput es para saber si esta cambiando de poder
+    private float moveInput, atackInput, jumpInput, changePowerInput;
     private Rigidbody2D rb;
+    //si esta tocando el suelo
     private bool isGrounded;
-    private float jumpTimeCounter;
+    //Si esta saltando
     private bool isJumping;
-    private int direction = 1;
-    private CapsuleCollider2D cc2d;
-    //POWER
-    private Power power;
-    private bool isAtack = false;
-    private float timeAtack;
-    private float initialTimeAtack = 0.3f;
-    private float cooldownAtack = 0f;
-    private float cooldownAtackTime = 0.6f;
-
-    public float speed;
-    public int countLive = 3;
-    public float live;
-    public Transform feetPos;
-    public float checkRadius;
+    //Que es lo que se considera suelo
     public LayerMask whatIsGround;
+    //A donde esta apuntando el pj
+    private int direction = 1;
+    //colisionador
+    private CapsuleCollider2D cc2d;
+
+    //POWERS
+    //Lista de poderes
+    private List<string> allPowerGet;
+    //Cooldown del cambio de poder
+    private float changeCooldown;
+    //tiempo inicial del cambio de poder
+    public float timeChangeCooldown = 0.1f;
+    //Puntero del poder
+    private int curretPowerSelect;
+    //Poder actual
+    private Power currentPower;
+    //Esta atacando
+    private bool isAtack = false;
+    //Tiempo para volver a atacar
+    private float coolDownAtack = 0f;
+    //Velocidad del pj
+    public float speed;
+
+    //Valores del pj
+    //Vida
+    public float live;
+    //Posicion del piso
+    public Transform feetPos;
+    //Radio de los pies
+    public float checkRadius;
+    //Fuerza del salto
     public float jumpForce;
+
+    //Tiempos
+    //Tiempo actual del salto
     public float jumpTime;
-    private float jumpInput;
+    //Tiempo de inmunidad
     private float inmuneTime;
+    //Tiempo del ataque
+    private float timeAtack;
+    //El tiempo maximo de salto
+    private float jumpTimeCounter;
+    //Tiempo en el que el pj sale volando
     private float flyDamageTime;
+    //Tiempo de vuelo inicial
     public float initialFlyDamageTime = 0.2f;
+    //Tiempo de inmunidad inicial
     public float initialInmuneTime = 0.5f;
+    //esta resiviendo daño
     private bool inDamage = false;
+    //Velocidad del vuelo cuando dañan al pj
     public float pushDamage = 10f;
+    //Si la tecla del ataque sigue apretada
+    private bool atackKeyPress = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        //Asignacion inicial del pj
         rb = GetComponent<Rigidbody2D>();
         cc2d = GetComponent<CapsuleCollider2D>();
-        power = GetComponent<Power>();
-        timeAtack = initialTimeAtack;
+        currentPower = GetComponent<SimpleAtack>();
+        allPowerGet = new List<string>
+        {
+            GetComponent<SimpleAtack>().GetName()
+        };
+
     }
+    //Movimiento del personaje
     private void Move()
     {
         rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
     }
+    //Devuelve si esta en el suelo
     private bool IsGrounded()
     {
         return Physics2D.OverlapCircle(feetPos.position, checkRadius, whatIsGround);
     }
+    //Giro del pj
     private void AnimatedWalk()
     {
         if (moveInput > 0 && !isAtack)
@@ -64,6 +108,7 @@ public class PlayerController : MonoBehaviour
             direction = -1;
         }
     }
+    //Resivir daño
     private void GetDamage(float damage)
     {
         if (inmuneTime <= 0)
@@ -74,6 +119,7 @@ public class PlayerController : MonoBehaviour
             inDamage = true;
         }
     }
+    //Saltar
     private void Jump()
     {
         if (isGrounded && Input.GetKeyDown(KeyCode.Space) && !isAtack)
@@ -101,69 +147,44 @@ public class PlayerController : MonoBehaviour
             isJumping = false;
         }
     }
+    //Ataque
     private void Atack()
     {
-        if (atackInput > 0 && !isAtack && cooldownAtack < 0f)
+        if (atackInput > 0 && !isAtack && coolDownAtack < 0f)
         {
+            atackKeyPress = true;
             isAtack = true;
         }
-        else if (isAtack && timeAtack > 0)
-        {
-            timeAtack -= Time.deltaTime;
-        }
-        else if (timeAtack <= 0)
-        {
-            isAtack = false;
-            timeAtack = initialTimeAtack;
-            cooldownAtack = cooldownAtackTime;
-        }
-    }
-    private void FixedUpdate()
-    {
-        if (inDamage)
-        {
-            if (flyDamageTime  > 0)
-            {
-                rb.velocity = new Vector2(direction * -pushDamage, pushDamage);
-            }
-            else
-            {
-                inDamage = false;
-            }
-        }
-        else if(inmuneTime <= 0)
-        {
-            moveInput = Input.GetAxisRaw("Horizontal");
-            atackInput = Input.GetAxisRaw("Atack");
-            //jumpInput = Input.GetAxis("Jump");
-            Move();
-            if (isAtack)
-            {
-                power.UsePower(rb, direction);
-            }
-        }    
     }
 
-    private void Update()
+
+    //Cambio de poder
+    private void ChangePower(string name)
     {
-        isGrounded = IsGrounded();
-        Atack();
-        cooldownAtack -= Time.deltaTime;
-        AnimatedWalk();
-        Jump();
-        inmuneTime -= Time.deltaTime;
-        flyDamageTime -= Time.deltaTime;
-        Debug.Log(live.ToString());
+        switch (name)
+        {
+            case "default":
+                currentPower = gameObject.GetComponent<SimpleAtack>();
+                break;
+            case "wallJump":
+                currentPower = gameObject.GetComponent<WallJump>();
+                break;
+            default:
+                //gameObject.AddComponent<WallJump>();
+                break;
+        }
     }
+    //Colicion del personaje
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (power.GetName().Equals("default"))
+        if (currentPower.GetName().Equals("default"))
         {
             if (collision.gameObject.tag.Equals("Enemy"))
             {
                 if (isAtack)
                 {
-                    power = collision.gameObject.GetComponent<Power>();
+                    ChangePower(collision.gameObject.GetComponent<Power>().GetName());
+                    allPowerGet.Add(currentPower.GetName());
                     Destroy(collision.gameObject);  //Animacion de muerte
                 }
                 else
@@ -179,5 +200,107 @@ public class PlayerController : MonoBehaviour
                 GetDamage(collision.gameObject.GetComponent<Power>().damage);
             }
         }
+    }
+    //Cambio de poderes
+    private void ChangePowerButton()
+    {
+        //Cambia al precionar Accion3
+        if (changePowerInput > 0)
+        {
+            if (curretPowerSelect + 1 >= allPowerGet.Count)
+            {
+                if (!(curretPowerSelect == 0))
+                {
+                    curretPowerSelect = 0;
+                    ChangePower(allPowerGet[curretPowerSelect]);
+                }
+            }
+            else
+            {
+                curretPowerSelect++;
+                ChangePower(allPowerGet[curretPowerSelect]);
+            }
+            changeCooldown = timeChangeCooldown;
+        }//Cambia al precionar Accion4
+        else if (changePowerInput < 0)
+        {
+            if (curretPowerSelect == 0)
+            {
+                if (!(curretPowerSelect + 1 == allPowerGet.Count))
+                {
+                    curretPowerSelect = allPowerGet.Count-1;
+                    ChangePower(allPowerGet[curretPowerSelect]);
+                }
+            }
+            else
+            {
+                curretPowerSelect--;
+                ChangePower(allPowerGet[curretPowerSelect]);
+            }
+            changeCooldown = timeChangeCooldown;
+        }
+        Debug.Log(currentPower.GetName());
+    }
+    private void FixedUpdate()
+    {
+        if (inDamage)
+        {
+            if (flyDamageTime > 0)
+            {
+                rb.velocity = new Vector2(direction * -pushDamage, pushDamage);
+            }
+            else
+            {
+                inDamage = false;
+            }
+        }
+        else if (inmuneTime <= 0)
+        {
+            moveInput = Input.GetAxisRaw("Horizontal");
+            atackInput = Input.GetAxisRaw("Atack");
+            changePowerInput = Input.GetAxisRaw("Accion3");
+            if (!isAtack)
+            {
+                //cambio de poder
+                if (isGrounded && changeCooldown <= 0)
+                {
+                    ChangePowerButton();
+                }
+                Move();
+            }
+            else
+            {
+                currentPower.UsePowerPlayer(rb, direction);
+            }
+        }
+    }
+
+    private void Update()
+    {
+        isGrounded = IsGrounded();
+        if (isAtack && timeAtack > 0)
+        {
+            timeAtack -= Time.deltaTime;
+        }
+        else if (timeAtack <= 0)
+        {
+            isAtack = false;
+            timeAtack = currentPower.initialTimeAtack;
+            coolDownAtack = currentPower.coolDownAtackTime;
+        }
+        if (atackInput == 0)
+        {
+            atackKeyPress = false;
+        }
+        if (!atackKeyPress)
+        {
+            Atack();
+        }
+        coolDownAtack -= Time.deltaTime;
+        changeCooldown -= Time.deltaTime;
+        AnimatedWalk();
+        Jump();
+        inmuneTime -= Time.deltaTime;
+        flyDamageTime -= Time.deltaTime;
     }
 }

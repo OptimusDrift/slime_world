@@ -113,11 +113,13 @@
     <Compile Include="Assets\Cinemachine\Timeline\CinemachineMixer.cs" />
     <Compile Include="Assets\Cinemachine\Timeline\CinemachineShot.cs" />
     <Compile Include="Assets\Cinemachine\Timeline\CinemachineTrack.cs" />
+    <Compile Include="Assets\Script\Enemy\Enemy.cs" />
     <Compile Include="Assets\Script\Platform\Platform.cs" />
     <Compile Include="Assets\Script\Player\PlayerController.cs" />
     <Compile Include="Assets\Script\Power\FirePower.cs" />
     <Compile Include="Assets\Script\Power\Power.cs" />
     <Compile Include="Assets\Script\Power\SimpleAtack.cs" />
+    <Compile Include="Assets\Script\Power\WallJump.cs" />
     <None Include="Assets\Cinemachine\ReleaseNotes.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:/Users/DK_RZ/Documents/Slime_worldGit/Slime_Wolrd/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>

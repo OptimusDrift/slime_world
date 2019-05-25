@@ -8,4 +8,10 @@ public class FirePower : Power
     {
         namePower = "firePower";
     }
+
+    override
+        public void UsePowerEnemy(Rigidbody2D rb, float direction)
+    {
+
+    }
 }

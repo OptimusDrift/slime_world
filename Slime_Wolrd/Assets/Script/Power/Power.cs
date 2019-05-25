@@ -5,16 +5,30 @@ using UnityEngine;
 public class Power : MonoBehaviour
 {
     protected string namePower, efect;
-    public float damage = 1f;
-    public float dashSpeed = 20f;
+    public float damage = 0f;
+    public float speed = 0f;
+    public float height = 0f;
+    public float coolDownAtackTime = 0f;
+    public float initialTimeAtack = 0f;
 
-    public void UsePower(Rigidbody2D rb, float direction)
+    virtual
+    public void UsePowerPlayer(Rigidbody2D rb, float direction)
     {
-        rb.velocity = new Vector2(direction * dashSpeed, 5f);
+
     }
 
+    virtual
+    public void UsePowerEnemy(Rigidbody2D rb, float direction)
+    {
+
+    }
     public string GetName()
     {
         return namePower;
+    }
+    virtual
+    public Power ChangePower()
+    {
+        return new Power();
     }
 }

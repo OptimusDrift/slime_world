@@ -27,7 +27,7 @@ public class Platform : MonoBehaviour
                 }
                 else
                 {
-                    time -= Time.deltaTime;
+                    time -= Time.fixedDeltaTime;
                 }
             }
         }
