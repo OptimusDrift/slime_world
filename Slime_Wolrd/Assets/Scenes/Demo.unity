@@ -771,7 +771,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.52, y: -2.67, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -790,7 +790,6 @@ GameObject:
   - component: {fileID: 561340937}
   - component: {fileID: 561340942}
   - component: {fileID: 561340936}
-  - component: {fileID: 561340941}
   - component: {fileID: 561340940}
   - component: {fileID: 561340943}
   m_Layer: 0
@@ -925,22 +924,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.06103611}
   m_Size: {x: 4.1337285, y: 4.653738}
   m_Direction: 0
---- !u!58 &561340941
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 561340935}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.03062439, y: -1.378087}
-  serializedVersion: 2
-  m_Radius: 6.3919992
 --- !u!114 &561340942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1509,6 +1492,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1214944206, guid: 4dd9e531b56e4a74b8aea9c4ceb99744, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1214944209, guid: 4dd9e531b56e4a74b8aea9c4ceb99744, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.52
@@ -1595,6 +1582,10 @@ PrefabInstance:
       propertyPath: m_Icon
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1393823642, guid: 4dd9e531b56e4a74b8aea9c4ceb99744, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1393823643, guid: 4dd9e531b56e4a74b8aea9c4ceb99744, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
@@ -1602,6 +1593,14 @@ PrefabInstance:
     - target: {fileID: 1393823643, guid: 4dd9e531b56e4a74b8aea9c4ceb99744, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.3906
+      objectReference: {fileID: 0}
+    - target: {fileID: 619424411, guid: 4dd9e531b56e4a74b8aea9c4ceb99744, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1861647918, guid: 4dd9e531b56e4a74b8aea9c4ceb99744, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4dd9e531b56e4a74b8aea9c4ceb99744, type: 3}
