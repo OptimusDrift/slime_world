@@ -18,7 +18,7 @@ public class Power : MonoBehaviour
     }
 
     virtual
-    public void UsePowerEnemy(Rigidbody2D rb, float direction)
+    public void UsePowerEnemy(Collider2D damageColider, bool direction)
     {
 
     }

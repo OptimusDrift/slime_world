@@ -15,8 +15,8 @@ public class FirePower : Power
         Debug.Log("asd");
     }
     override
-        public void UsePowerEnemy(Rigidbody2D rb, float direction)
+        public void UsePowerEnemy(Collider2D damageColider, bool active)
     {
-
+        damageColider.enabled = active;
     }
 }

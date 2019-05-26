@@ -36,8 +36,8 @@ public class MovimentAcidBall : MonoBehaviour
     {
         if (collision.tag.Equals("Wall"))
         {
+            Debug.Log("Crea otro objeto que cae desde la posicion actual y queda un rato en el suelo haciendo daño x tiempo");
             Destroy(gameObject);
-            Debug.Log(collision.name);
         }
     }
 }

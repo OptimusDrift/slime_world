@@ -113,10 +113,11 @@
     <Compile Include="Assets\Cinemachine\Timeline\CinemachineMixer.cs" />
     <Compile Include="Assets\Cinemachine\Timeline\CinemachineShot.cs" />
     <Compile Include="Assets\Cinemachine\Timeline\CinemachineTrack.cs" />
-    <Compile Include="Assets\Script\Enemy\EnemyFire.cs" />
+    <Compile Include="Assets\Script\Enemy\Enemy.cs" />
     <Compile Include="Assets\Script\Platform\Platform.cs" />
     <Compile Include="Assets\Script\Player\PlayerController.cs" />
     <Compile Include="Assets\Script\Power\FirePower.cs" />
+    <Compile Include="Assets\Script\Power\Fly.cs" />
     <Compile Include="Assets\Script\Power\Power.cs" />
     <Compile Include="Assets\Script\Power\SimpleAtack.cs" />
     <Compile Include="Assets\Script\Power\WallJump.cs" />

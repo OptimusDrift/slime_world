@@ -166,6 +166,7 @@ public class PlayerController : MonoBehaviour
     //Cambio de poder
     private void ChangePower(string name)
     {
+        Debug.Log("AGREGAR ATAQUES!!!" + name);
         switch (name)
         {
             case "default":
@@ -176,6 +177,9 @@ public class PlayerController : MonoBehaviour
                 break;
             case "firePower":
                 currentPower = gameObject.GetComponent<FirePower>();
+                break;
+            case "flyPower":
+                currentPower = gameObject.GetComponent<Fly>();
                 break;
             default:
                 //gameObject.AddComponent<WallJump>();
@@ -192,6 +196,7 @@ public class PlayerController : MonoBehaviour
                 if (isAtack)
                 {
                     ChangePower(collision.gameObject.GetComponent<Power>().GetName());
+                    Debug.Log(collision.gameObject.GetComponent<Power>().GetName());
                     allPowerGet.Add(currentPower.GetName());
                     Destroy(collision.gameObject);  //Animacion de muerte
                 }
@@ -247,7 +252,6 @@ public class PlayerController : MonoBehaviour
             }
             changeCooldown = timeChangeCooldown;
         }
-        Debug.Log(currentPower.GetName());
     }
     private void FixedUpdate()
     {
@@ -278,7 +282,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                Debug.Log("asd");
+                Debug.Log(currentPower.GetName());
                 currentPower.UsePowerPlayer(rb, direction);
             }
         }

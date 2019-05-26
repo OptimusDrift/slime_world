@@ -8,6 +8,8 @@ public class WallJump : Power
     public Transform posWallJump;
     public GameObject shot;
     public Transform shotSpawn;
+    private float shotTime;
+    public float initialShotTime = 0.3f;
     WallJump()
     {
         namePower = "wallJump";
@@ -26,6 +28,7 @@ public class WallJump : Power
         initialTimeAtack = 0.05f;
         speed = 30f;
         height = 10f;
+        shotTime = 0f;
     }
 
     override
@@ -41,7 +44,15 @@ public class WallJump : Power
         }
         else
         {
-            Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
+            if (shotTime <= 0)
+            {
+                Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
+                shotTime = initialShotTime;
+            }
+            else
+            {
+                shotTime -= Time.fixedDeltaTime;
+            }
         }
     }
 
