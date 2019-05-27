@@ -83,30 +83,35 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         cc2d = GetComponent<CapsuleCollider2D>();
         currentPower = GetComponent<SimpleAtack>();
+        //Lista de poderes actuales solo empieza con el poder inicial
         allPowerGet = new List<string>
         {
             GetComponent<SimpleAtack>().GetName()
         };
 
     }
+
     //Movimiento del personaje
     private void Move()
     {
+        //Asigna la velocidad de movimiendo y la direccion, manteniendo la velocidad de caida
         rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
     }
     //Devuelve si esta en el suelo
     private bool IsGrounded()
     {
+        //Revisa el objeto de feetPos y revisa si esta colicionando con el tag "Ground"
         return Physics2D.OverlapCircle(feetPos.position, checkRadius, whatIsGround);
     }
     //Giro del pj
     private void AnimatedWalk()
     {
+        //Si es mayor a 0 y no esta atacando gira el pj a la derecha
         if (moveInput > 0 && !isAtack)
         {
             transform.eulerAngles = new Vector3(0, 0, 0);
             direction = 1;
-        }
+        }//Si es mayor a 0 y no esta atacando gira el pj a la izquierda
         else if (moveInput < 0 && !isAtack)
         {
             transform.eulerAngles = new Vector3(0, 180, 0);
@@ -116,6 +121,7 @@ public class PlayerController : MonoBehaviour
     //Resivir daño
     private void GetDamage(float damage)
     {
+        //Si resive daño el pj tiene un pequeño tiempo de inmunidad
         if (inmuneTime <= 0)
         {
             live -= damage;
@@ -124,9 +130,10 @@ public class PlayerController : MonoBehaviour
             inDamage = true;
         }
     }
-    //Saltar
+    //Saltar (Cambiar barra por tecla del mando)
     private void Jump()
     {
+        //Si no esta en el aire puede saltar
         if (isGrounded && Input.GetKeyDown(KeyCode.Space) && !isAtack)
         {
             isJumping = true;
@@ -253,6 +260,14 @@ public class PlayerController : MonoBehaviour
             changeCooldown = timeChangeCooldown;
         }
     }
+
+    private void CounterDecrease()
+    {
+        coolDownAtack -= Time.deltaTime;
+        changeCooldown -= Time.deltaTime;
+        inmuneTime -= Time.deltaTime;
+        flyDamageTime -= Time.deltaTime;
+    }
     private void FixedUpdate()
     {
         if (inDamage)
@@ -269,6 +284,7 @@ public class PlayerController : MonoBehaviour
         else if (inmuneTime <= 0)
         {
             moveInput = Input.GetAxisRaw("Horizontal");
+            AnimatedWalk();
             atackInput = Input.GetAxisRaw("Atack");
             changePowerInput = Input.GetAxisRaw("Accion3");
             if (!isAtack)
@@ -309,11 +325,7 @@ public class PlayerController : MonoBehaviour
         {
             Atack();
         }
-        coolDownAtack -= Time.deltaTime;
-        changeCooldown -= Time.deltaTime;
-        AnimatedWalk();
         Jump();
-        inmuneTime -= Time.deltaTime;
-        flyDamageTime -= Time.deltaTime;
+        CounterDecrease();
     }
 }

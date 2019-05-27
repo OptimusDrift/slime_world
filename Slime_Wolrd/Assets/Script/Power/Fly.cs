@@ -19,8 +19,8 @@ public class Fly : Power
     }
 
     override
-        public void UsePowerEnemy(Collider2D damageColider, bool direction)
+        public float UsePowerEnemy(Rigidbody2D rb, float direction)
     {
-
+        return 0f;
     }
 }
