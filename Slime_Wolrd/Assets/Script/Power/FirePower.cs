@@ -21,8 +21,9 @@ public class FirePower : Power
     override
         public void UsePowerPlayer(Rigidbody2D rb, float direction)
     {
-        Debug.Log("asd");
+            rb.velocity = new Vector2(direction * speed, 0f);
     }
+
     override
         public float UsePowerEnemy(Rigidbody2D rb, float direction)
     {

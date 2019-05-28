@@ -7,9 +7,8 @@ public class PlayerController : MonoBehaviour
     [Header ("Salto")]
     //moveImput es el valor hacia donde se mueve control
     //atackImput es para saber si esta atacando
-    //jumpImput es para saber si esta saltando
     //changePowerInput es para saber si esta cambiando de poder
-    private float moveInput, atackInput, jumpInput, changePowerInput;
+    private float moveInput, atackInput, changePowerInput;
     private Rigidbody2D rb;
     //si esta tocando el suelo
     private bool isGrounded;
@@ -41,6 +40,8 @@ public class PlayerController : MonoBehaviour
     private float coolDownAtack = 0f;
     //Velocidad del pj
     public float speed;
+    //Velocidad del pj
+    private float actualSpeed;
 
     [Header("Vida")]
     //Valores del pj
@@ -88,14 +89,14 @@ public class PlayerController : MonoBehaviour
         {
             GetComponent<SimpleAtack>().GetName()
         };
-
+        actualSpeed = speed;
     }
 
     //Movimiento del personaje
     private void Move()
     {
         //Asigna la velocidad de movimiendo y la direccion, manteniendo la velocidad de caida
-        rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
+        rb.velocity = new Vector2(moveInput * actualSpeed, rb.velocity.y);
     }
     //Devuelve si esta en el suelo
     private bool IsGrounded()
@@ -130,33 +131,42 @@ public class PlayerController : MonoBehaviour
             inDamage = true;
         }
     }
-    //Saltar (Cambiar barra por tecla del mando)
+    bool stopPress = false;
+    //Saltar
     private void Jump()
     {
         //Si no esta en el aire puede saltar
-        if (isGrounded && Input.GetKeyDown(KeyCode.Space) && !isAtack)
+        if (isGrounded && Input.GetAxisRaw("Jump") > 0 && !isAtack)
         {
-            isJumping = true;
-            jumpTimeCounter = jumpTime;
-            rb.velocity = Vector2.up * jumpForce;
-        }
-
-        if (Input.GetKey(KeyCode.Space) && !isAtack)
-        {
-            if (jumpTimeCounter > 0 && isJumping)
+            if (!stopPress)
             {
+                isJumping = true;
+                jumpTimeCounter = jumpTime;
                 rb.velocity = Vector2.up * jumpForce;
-                jumpTimeCounter -= Time.deltaTime;
-            }
-            else
-            {
-                isJumping = false;
+                stopPress = true;
             }
         }
 
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (Input.GetAxisRaw("Jump") > 0 && !isAtack && stopPress)
+        {
+            if (stopPress)
+            {
+                if (jumpTimeCounter > 0 && isJumping)
+                {
+                    rb.velocity = Vector2.up * jumpForce;
+                    jumpTimeCounter -= Time.deltaTime;
+                }
+                else
+                {
+                    isJumping = false;
+                }
+            }
+        }
+
+        if (Input.GetAxisRaw("Jump") == 0)
         {
             isJumping = false;
+            stopPress = false;
         }
     }
     //Ataque
@@ -193,6 +203,18 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
+    //Busca el ataque
+    private bool NewAtack(string name)
+    {
+        foreach (var item in allPowerGet)
+        {
+            if (item.Equals(name))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     //Colicion del personaje
     private void OnCollisionStay2D(Collision2D collision)
     {
@@ -202,9 +224,11 @@ public class PlayerController : MonoBehaviour
             {
                 if (isAtack)
                 {
-                    ChangePower(collision.gameObject.GetComponent<Power>().GetName());
-                    Debug.Log(collision.gameObject.GetComponent<Power>().GetName());
-                    allPowerGet.Add(currentPower.GetName());
+                    if (!NewAtack(collision.gameObject.GetComponent<Power>().GetName()))
+                    {
+                        allPowerGet.Add(collision.gameObject.GetComponent<Power>().GetName());
+                    }
+                    //ChangePower(collision.gameObject.GetComponent<Power>().GetName());
                     Destroy(collision.gameObject);  //Animacion de muerte
                 }
                 else
@@ -221,43 +245,54 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    bool changePress = false;
     //Cambio de poderes
     private void ChangePowerButton()
     {
         //Cambia al precionar Accion3
         if (changePowerInput > 0)
         {
-            if (curretPowerSelect + 1 >= allPowerGet.Count)
+            if (!changePress)
             {
-                if (!(curretPowerSelect == 0))
+                if (curretPowerSelect + 1 >= allPowerGet.Count)
                 {
-                    curretPowerSelect = 0;
+                    if (!(curretPowerSelect == 0))
+                    {
+                        curretPowerSelect = 0;
+                        ChangePower(allPowerGet[curretPowerSelect]);
+                    }
+                }
+                else
+                {
+                    curretPowerSelect++;
                     ChangePower(allPowerGet[curretPowerSelect]);
                 }
+                changePress = true;
             }
-            else
-            {
-                curretPowerSelect++;
-                ChangePower(allPowerGet[curretPowerSelect]);
-            }
-            changeCooldown = timeChangeCooldown;
         }//Cambia al precionar Accion4
         else if (changePowerInput < 0)
         {
-            if (curretPowerSelect == 0)
+            if (!changePress)
             {
-                if (!(curretPowerSelect + 1 == allPowerGet.Count))
+                if (curretPowerSelect == 0)
                 {
-                    curretPowerSelect = allPowerGet.Count-1;
+                    if (!(curretPowerSelect + 1 == allPowerGet.Count))
+                    {
+                        curretPowerSelect = allPowerGet.Count - 1;
+                        ChangePower(allPowerGet[curretPowerSelect]);
+                    }
+                }
+                else
+                {
+                    curretPowerSelect--;
                     ChangePower(allPowerGet[curretPowerSelect]);
                 }
             }
-            else
-            {
-                curretPowerSelect--;
-                ChangePower(allPowerGet[curretPowerSelect]);
-            }
-            changeCooldown = timeChangeCooldown;
+            changePress = true;
+        }
+        if (changePowerInput == 0)
+        {
+            changePress = false;
         }
     }
 
@@ -286,19 +321,23 @@ public class PlayerController : MonoBehaviour
             moveInput = Input.GetAxisRaw("Horizontal");
             AnimatedWalk();
             atackInput = Input.GetAxisRaw("Atack");
+            if (Input.GetAxisRaw("Run") > 0)
+            {
+                Run(speed * 2);
+            }
+            else
+            {
+                Run(speed);
+            }
             changePowerInput = Input.GetAxisRaw("Accion3");
             if (!isAtack)
             {
                 //cambio de poder
-                if (isGrounded && changeCooldown <= 0)
-                {
-                    ChangePowerButton();
-                }
+                ChangePowerButton();
                 Move();
             }
             else
             {
-                Debug.Log(currentPower.GetName());
                 currentPower.UsePowerPlayer(rb, direction);
             }
         }
@@ -327,5 +366,10 @@ public class PlayerController : MonoBehaviour
         }
         Jump();
         CounterDecrease();
+    }
+
+    public void Run(float runSpeed)
+    {
+        actualSpeed = runSpeed;
     }
 }
