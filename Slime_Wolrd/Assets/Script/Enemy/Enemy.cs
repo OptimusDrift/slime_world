@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         power = GetComponent<Power>();
         power.coolDownAtackTime = 0f;
+        Physics2D.IgnoreLayerCollision(11, 11);
     }
     //Giro del pj
     private void AnimatedWalk(float moveInput)

@@ -121,6 +121,7 @@
     <Compile Include="Assets\Script\Power\Power.cs" />
     <Compile Include="Assets\Script\Power\SimpleAtack.cs" />
     <Compile Include="Assets\Script\Power\WallJump.cs" />
+    <Compile Include="Assets\Script\Sin calsificar\HudVida.cs" />
     <Compile Include="Assets\Script\Sin calsificar\MovimentAcidBall.cs" />
     <Compile Include="Assets\Script\Sin calsificar\PauseGame.cs" />
     <None Include="Assets\Cinemachine\ReleaseNotes.txt" />

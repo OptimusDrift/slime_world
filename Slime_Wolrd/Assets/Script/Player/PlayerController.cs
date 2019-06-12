@@ -47,8 +47,11 @@ public class PlayerController : MonoBehaviour
     //Valores del pj
     //Vida
     public float live;
-    //Posicion del piso
-    public Transform feetPos;
+    public float maxLive;
+    //Posicion del piso izq
+    public Transform feetPosLeft;
+    //Posicion del piso der
+    public Transform feetPosRigth;
     //Radio de los pies
     public float checkRadius;
     //Fuerza del salto
@@ -77,6 +80,9 @@ public class PlayerController : MonoBehaviour
     //Si la tecla del ataque sigue apretada
     private bool atackKeyPress = false;
 
+    [Header("HUD")]
+    public GameObject Hud;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -102,7 +108,7 @@ public class PlayerController : MonoBehaviour
     private bool IsGrounded()
     {
         //Revisa el objeto de feetPos y revisa si esta colicionando con el tag "Ground"
-        return Physics2D.OverlapCircle(feetPos.position, checkRadius, whatIsGround);
+        return Physics2D.OverlapCircle(feetPosLeft.position, checkRadius, whatIsGround) || Physics2D.OverlapCircle(feetPosRigth.position, checkRadius, whatIsGround);
     }
     //Giro del pj
     private void AnimatedWalk()
@@ -126,9 +132,21 @@ public class PlayerController : MonoBehaviour
         if (inmuneTime <= 0)
         {
             live -= damage;
+            if (Hud.GetComponent<HudVida>().LostLive(damage))
+            {
+                Debug.Log("Insertar Muerte");
+                Debug.Log("Pero como es un mundo loco te revivo");
+                live = Hud.GetComponent<HudVida>().WinFullLife();
+                Debug.Log("Y te agrego 1 vida extra");
+                if (Hud.GetComponent<HudVida>().WinMaxLife())
+                {
+                    maxLive++;
+                }
+            }
             inmuneTime = initialInmuneTime;
             flyDamageTime = initialFlyDamageTime;
             inDamage = true;
+            Physics2D.IgnoreLayerCollision(10, 11);
         }
     }
     bool stopPress = false;
@@ -190,7 +208,7 @@ public class PlayerController : MonoBehaviour
                 currentPower = gameObject.GetComponent<SimpleAtack>();
                 break;
             case "wallJump":
-                currentPower = gameObject.GetComponent<WallJump>();
+                currentPower =  gameObject.GetComponent<WallJump>();
                 break;
             case "firePower":
                 currentPower = gameObject.GetComponent<FirePower>();
@@ -224,6 +242,10 @@ public class PlayerController : MonoBehaviour
             {
                 if (isAtack)
                 {
+                    if (Hud.GetComponent<HudVida>().WinLife())
+                    {
+                        live++;
+                    }
                     if (!NewAtack(collision.gameObject.GetComponent<Power>().GetName()))
                     {
                         allPowerGet.Add(collision.gameObject.GetComponent<Power>().GetName());
@@ -318,6 +340,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (inmuneTime <= 0)
         {
+            Physics2D.IgnoreLayerCollision(10, 11, false);
             moveInput = Input.GetAxisRaw("Horizontal");
             AnimatedWalk();
             atackInput = Input.GetAxisRaw("Atack");
@@ -371,5 +394,12 @@ public class PlayerController : MonoBehaviour
     public void Run(float runSpeed)
     {
         actualSpeed = runSpeed;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(feetPosLeft.position, checkRadius);
+        Gizmos.DrawWireSphere(feetPosRigth.position, checkRadius);
     }
 }

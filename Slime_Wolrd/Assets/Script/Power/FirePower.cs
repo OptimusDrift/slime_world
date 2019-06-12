@@ -28,6 +28,12 @@ public class FirePower : Power
         public float UsePowerEnemy(Rigidbody2D rb, float direction)
     {
         rcs = Physics2D.CircleCastAll(transform.position, 10f, transform.position);
+        ActiveFire();
+        return 0f;
+    }
+
+    private void ActiveFire()
+    {
         for (int i = 0; i < rcs.Length; i++)
         {
             if (rcs[i].collider.tag.Equals("Player"))
@@ -72,6 +78,5 @@ public class FirePower : Power
                 Debug.Log("Agrgar animaciones :V");
             }
         }
-        return 0f;
     }
 }
